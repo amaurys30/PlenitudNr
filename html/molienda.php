@@ -65,7 +65,10 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
 
         <!-- Botón para abrir el modal de agregar fondada -->
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarFondadaModal">Agregar Fondada</button>
-
+        <!-- boton para participaciones -->
+        <a href="participacion.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Participaciones</a>
+        <!-- boton para pagos -->
+        <a href="pagos.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Pagos</a>
         <!-- Tabla de fondadas -->
         <h4 class="mt-4">Fondadas Registradas</h4>
         <table class="table table-bordered">

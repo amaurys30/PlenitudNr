@@ -30,31 +30,7 @@ CREATE TABLE `fondada` (
   PRIMARY KEY (`id_fondada`),
   KEY `id_molienda` (`id_molienda`),
   CONSTRAINT `fondada_ibfk_1` FOREIGN KEY (`id_molienda`) REFERENCES `molienda` (`id_molienda`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `gasto`
---
-
-DROP TABLE IF EXISTS `gasto`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `gasto` (
-  `id_gasto` int NOT NULL AUTO_INCREMENT,
-  `id_molienda` int DEFAULT NULL,
-  `id_persona` int DEFAULT NULL,
-  `id_labor` int DEFAULT NULL,
-  `monto` decimal(10,2) NOT NULL,
-  `fecha_gasto` datetime DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id_gasto`),
-  KEY `id_molienda` (`id_molienda`),
-  KEY `id_persona` (`id_persona`),
-  KEY `id_labor` (`id_labor`),
-  CONSTRAINT `gasto_ibfk_1` FOREIGN KEY (`id_molienda`) REFERENCES `molienda` (`id_molienda`) ON DELETE CASCADE,
-  CONSTRAINT `gasto_ibfk_2` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id_persona`) ON DELETE CASCADE,
-  CONSTRAINT `gasto_ibfk_3` FOREIGN KEY (`id_labor`) REFERENCES `labor` (`id_labor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -69,7 +45,7 @@ CREATE TABLE `labor` (
   `nombre_labor` varchar(100) NOT NULL,
   `precio_por_fondada` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id_labor`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -86,7 +62,7 @@ CREATE TABLE `molienda` (
   `fecha_fin` datetime DEFAULT NULL,
   `estado` enum('activa','inactiva') DEFAULT 'activa',
   PRIMARY KEY (`id_molienda`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -98,16 +74,13 @@ DROP TABLE IF EXISTS `pago`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `pago` (
   `id_pago` int NOT NULL AUTO_INCREMENT,
-  `id_persona` int DEFAULT NULL,
-  `id_molienda` int DEFAULT NULL,
+  `id_participacion` int DEFAULT NULL,
   `monto_total` decimal(10,2) NOT NULL,
   `fecha_pago` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_pago`),
-  KEY `id_persona` (`id_persona`),
-  KEY `id_molienda` (`id_molienda`),
-  CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id_persona`) ON DELETE CASCADE,
-  CONSTRAINT `pago_ibfk_2` FOREIGN KEY (`id_molienda`) REFERENCES `molienda` (`id_molienda`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  KEY `id_participacion` (`id_participacion`),
+  CONSTRAINT `pago_ibfk_1` FOREIGN KEY (`id_participacion`) REFERENCES `participacion` (`id_participacion`) ON DELETE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -147,6 +120,7 @@ CREATE TABLE `participacion` (
   `cantidad_fondadas` int NOT NULL,
   `fecha_participacion` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `es_procesamiento` tinyint(1) DEFAULT '0',
+  `monto_total` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id_participacion`),
   KEY `id_persona` (`id_persona`),
   KEY `id_molienda` (`id_molienda`),
@@ -154,7 +128,7 @@ CREATE TABLE `participacion` (
   CONSTRAINT `participacion_ibfk_1` FOREIGN KEY (`id_persona`) REFERENCES `persona` (`id_persona`) ON DELETE CASCADE,
   CONSTRAINT `participacion_ibfk_2` FOREIGN KEY (`id_molienda`) REFERENCES `molienda` (`id_molienda`) ON DELETE CASCADE,
   CONSTRAINT `participacion_ibfk_3` FOREIGN KEY (`id_labor`) REFERENCES `labor` (`id_labor`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -173,7 +147,7 @@ CREATE TABLE `persona` (
   `fecha_registro` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_persona`),
   UNIQUE KEY `cedula` (`cedula`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -189,7 +163,7 @@ CREATE TABLE `preciopanela` (
   `precio_unitario` decimal(10,2) NOT NULL,
   `fecha_actualizacion` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id_precio`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -211,7 +185,7 @@ CREATE TABLE `produccionpanela` (
   KEY `id_precio` (`id_precio`),
   CONSTRAINT `produccionpanela_ibfk_1` FOREIGN KEY (`id_fondada`) REFERENCES `fondada` (`id_fondada`) ON DELETE CASCADE,
   CONSTRAINT `produccionpanela_ibfk_2` FOREIGN KEY (`id_precio`) REFERENCES `preciopanela` (`id_precio`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -223,4 +197,4 @@ CREATE TABLE `produccionpanela` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-29 13:16:10
+-- Dump completed on 2024-10-05 14:20:58

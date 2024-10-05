@@ -10,21 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = mysqli_query($conexion, $query);
 
     if (mysqli_num_rows($result) > 0) {
-        // Si ya existe, mostrar un mensaje de error
-        echo "<div class='alert alert-danger' role='alert'>
-                El tipo de panela ya existe. No se puede agregar nuevamente.
-              </div>";
+        // Si ya existe, redirigir con un mensaje de error
+        header("Location: index.php?registro=existe");
     } else {
         // Si no existe, agregar el nuevo tipo de panela
         $sql = "INSERT INTO PrecioPanela (tipo_panela, precio_unitario) VALUES ('$tipo_panela', '$precio_unitario')";
         if (mysqli_query($conexion, $sql)) {
-            echo "<div class='alert alert-success' role='alert'>
-                    Precio de panela agregado correctamente.
-                  </div>";
+            header("Location: index.php?registro=exitoso");
         } else {
-            echo "Error al agregar el precio de panela: " . mysqli_error($conexion);
+            header("Location: index.php?registro=error");
         }
     }
 }
+
 mysqli_close($conexion);
 ?>
