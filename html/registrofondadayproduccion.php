@@ -33,11 +33,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Confirmar transacción
         mysqli_commit($conexion);
-        echo "Fondada y producción agregadas correctamente.";
+        header("Location: molienda.php?id_molienda=<?php echo $id_molienda; ?>&registro=exitoso");
     } catch (Exception $e) {
         // Revertir transacción en caso de error
         mysqli_rollback($conexion);
-        echo "Error al agregar fondada: " . $e->getMessage();
+        //echo "Error al agregar fondada: " . $e->getMessage();
+        header("Location: molienda.php?id_molienda=<?php echo $id_molienda; ?>&registro=errorFondada");
     }
 }
 

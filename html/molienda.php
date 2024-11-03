@@ -61,7 +61,7 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
             <strong>Fecha de Fin:</strong> <?php echo htmlspecialchars($molienda['fecha_fin'] ?? 'No disponible'); ?><br>
         </p>
 
-        <a href="index.php" class="btn btn-success">Volver</a>
+        <a href="principal.php" class="btn btn-success">Volver</a>
 
         <!-- Botón para abrir el modal de agregar fondada -->
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarFondadaModal">Agregar Fondada</button>
@@ -71,6 +71,17 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
         <a href="pagos.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Pagos</a>
         <!-- Tabla de fondadas -->
         <h4 class="mt-4">Fondadas Registradas</h4>
+         <!-- Mensaje de éxito o error -->
+         <?php
+            if (isset($_GET['registro'])) {
+                if ($_GET['registro'] == 'exitoso') {
+                    echo '<div id="mensaje-exito" class="alert alert-success mt-3">Fondada y producción agregadas correctamente.</div>';
+                } elseif ($_GET['registro'] == 'errorFondada') {
+                    echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Error al agregar fondada.</div>';
+                }
+            }
+        ?>
+
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -142,6 +153,8 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
         </div>
     </div>
 
+    <!-- codigo para eliminar los mensajes despues de 10 segundos  -->
+    <script src="../js/utilidades.js"></script>
     <!-- JavaScript necesario para los modales de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>

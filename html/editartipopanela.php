@@ -12,9 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             WHERE id_precio = $id_precio";
 
     if (mysqli_query($conexion, $sql)) {
-        header("Location: index.php?registro=actualizado");
+        header("Location: principal.php?registro=actualizado");
     } else {
-        header("Location: index.php?registro=error");
+        header("Location: principal.php?registro=error");
     }
 }
 

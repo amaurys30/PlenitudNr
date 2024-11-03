@@ -3,6 +3,35 @@
 $mensaje = $_GET['actualizacion'] ?? null;
 ?>
 
+<?php
+    if (isset($_GET['registro'])) {
+        // Redirigir después de 10 segundos
+        header("Refresh:10; url=principal.php");        
+    }
+?>
+
+<?php
+    if (isset($_GET['actualizacion'])) {
+        // Redirigir después de 10 segundos
+        header("Refresh:10; url=principal.php");        
+    }
+?>
+
+<style> 
+
+.cerrarsesion {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%; 
+
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+</style>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,6 +39,8 @@ $mensaje = $_GET['actualizacion'] ?? null;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión Producción Panela</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/estilos.css">
     <script>
         // Función para ocultar todas las secciones y mostrar la seleccionada
         function mostrarSeccion(seccionId) {
@@ -30,14 +61,16 @@ $mensaje = $_GET['actualizacion'] ?? null;
     </script>
 </head>
 
-<body>
+<body class="cuerpoPrincipal">
+<div class="contenido-principal">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Plenitud Naranjal</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+            <div class="collapse navbar-collapse d-flex justify-content-between" id="navbarNav">
+                <!-- Contenedor de los enlaces del menú a la izquierda -->
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="mostrarSeccion('molienda-content')">Crear Molienda</a>
@@ -52,13 +85,27 @@ $mensaje = $_GET['actualizacion'] ?? null;
                         <a class="nav-link" href="#" onclick="mostrarSeccion('labores-content')">Registrar Labores</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="mostrarSeccion('reporte-content')">Reporte Pagos y Producción</a>
+                        <a class="nav-link" href="#" onclick="mostrarSeccion('tipo-panela-content')">Tipos de Panela</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="mostrarSeccion('tipo-panela-content')">Tipos de Panela</a>
+                        <a class="nav-link" href="#" onclick="mostrarSeccion('reporte-content')">Reportes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="usuario.php">Usuarios</a>
+                    </li>
+                </ul>
+
+                <!-- Contenedor del botón de cerrar sesión alineado a la derecha -->
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="btn btn-danger d-flex align-items-center" href="../index.php">
+                            Cerrar Sesión
+                            <img class="cerrarsesion ms-2" src="../recursos/imagenes/cerrar.jpg" alt="cerrar" style="width: 20px; height: 20px;">
+                        </a>
                     </li>
                 </ul>
             </div>
+
         </div>
     </nav>
 
@@ -93,6 +140,21 @@ $mensaje = $_GET['actualizacion'] ?? null;
                 </div>
             <?php endif; ?>
 
+
+             <!-- Mensaje de éxito o error -->
+            <?php
+                 if (isset($_GET['registro'])) {
+                    if ($_GET['registro'] == 'moliendaFinalizada') {
+                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Esta molienda ya está finalizada.</div>';
+                    } elseif ($_GET['registro'] == 'pagosPendientes') {
+                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Hay pagos pendientes. No se puede finalizar la molienda.</div>';
+                    }elseif ($_GET['registro'] == 'finalizadaExitosamente') {
+                        echo '<div id="mensaje-exito" class="alert alert-success mt-3">La molienda ha sido finalizada correctamente.</div>';
+                    }elseif ($_GET['registro'] == 'errorFinalizar') {
+                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Error al finalizar la molienda.</div>';
+                    }
+                }
+            ?>
 
             <table class="table mt-4">
                 <thead>
@@ -448,23 +510,44 @@ $mensaje = $_GET['actualizacion'] ?? null;
                 </div>
             </div>
         </div>
-
+        </div>
     </div>
 
+    <footer class="bg-dark text-light py-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <h6>Información de Contacto</h6>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-envelope"></i> plenitud@gmail.com</li>
+                    <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Naranjal, Tiquisio.</li>
+                </ul>
+            </div>
+            <div class="col-md-6 text-md-end text-center">
+                <h6 class="siguenos">Síguenos</h6>
+                <a href="#" class="text-light me-3">
+                    <i class="fab fa-facebook fa-lg"></i>
+                </a>
+                <a href="#" class="text-light me-3">
+                    <i class="fab fa-twitter fa-lg"></i>
+                </a>
+                <a href="#" class="text-light me-3">
+                    <i class="fab fa-instagram fa-lg"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col text-center">
+                <small>&copy; 2024 Plenitud Nr. Todos los derechos reservados.</small>
+            </div>
+        </div>
+    </div>
+</footer>
+
+                            
    <!-- codigo para eliminar los mensajes despues de 10 segundos  -->
-    <script>
-        // Esperar a que el DOM esté completamente cargado
-        document.addEventListener("DOMContentLoaded", function() {
-            // Seleccionar el elemento del mensaje
-            var mensaje = document.getElementById("mensaje-exito");
-            if (mensaje) {
-                // Ocultar el mensaje después de 10 segundos (10000 milisegundos)
-                setTimeout(function() {
-                    mensaje.style.display = "none";
-                }, 10000);
-            }
-        });
-    </script>
+   <script src="../js/utilidades.js"></script>
     
     <!-- para busqueda de personas por nombre -->
     <script>
@@ -564,5 +647,6 @@ $mensaje = $_GET['actualizacion'] ?? null;
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    
 </body>
 </html>

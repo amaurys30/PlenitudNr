@@ -1,0 +1,44 @@
+/* Hace que el body ocupe toda la pantalla y use flexbox */
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+/* El contenido principal crece y empuja al footer hacia abajo si es necesario */
+.contenido-principal {
+    flex: 1;
+}
+/* Agregar un margen superior para evitar que el footer se pegue al contenido */
+footer {
+    margin-top: auto;
+}
+
+/* Ajusta el tamaño de los íconos en dispositivos móviles y grandes */
+footer a i {
+    transition: color 0.3s ease;
+}
+
+footer a:hover i {
+    color: #00aced; /* Cambia el color en hover */
+}
+
+footer h6 {
+    font-weight: bold;
+    color: #f8f9fa;
+}
+
+.siguenos{
+    margin-right: 30px;
+}
+
+/* Reduce el tamaño del texto de contacto para mayor limpieza */
+footer ul li {
+    font-size: 0.9rem;
+}
+
+/* Reduce el espaciado entre elementos en dispositivos pequeños */
+@media (max-width: 576px) {
+    footer .row .col-md-6 {
+        margin-bottom: 1rem;
+    }
+}

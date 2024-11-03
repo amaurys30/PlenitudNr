@@ -50,6 +50,7 @@ $total_paginas = ceil($total / $limite);
 for ($i = 1; $i <= $total_paginas; $i++) {
     echo "<a href='#' class='btn btn-primary paginacion' data-pagina='$i'>$i</a> ";
 }
-
+echo '<br>';
+echo '<br>';
 mysqli_close($conexion);
 ?>

@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Si existe, redirigir con un mensaje de error
     if (mysqli_num_rows($result_check) > 0) {
-        header("Location: index.php?registro=Laboryaexiste");
+        header("Location: principal.php?registro=Laboryaexiste");
     } else {
         // Insertar la nueva labor en la base de datos
         $sql_insert = "INSERT INTO Labor (nombre_labor, precio_por_fondada) VALUES (?, ?)";
@@ -22,9 +22,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         mysqli_stmt_bind_param($stmt_insert, "sd", $nombre_labor, $precio_por_fondada);
 
         if (mysqli_stmt_execute($stmt_insert)) {
-            header("Location: index.php?registro=Laborexitoso");
+            header("Location: principal.php?registro=Laborexitoso");
         } else {
-            header("Location: index.php?registro=Laborerror");
+            header("Location: principal.php?registro=Laborerror");
         }
 
         mysqli_stmt_close($stmt_insert);

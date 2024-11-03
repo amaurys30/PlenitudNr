@@ -8,9 +8,9 @@ if (isset($_GET['id'])) {
     $sql = "DELETE FROM PrecioPanela WHERE id_precio = $id_precio";
 
     if (mysqli_query($conexion, $sql)) {
-        header("Location: index.php?registro=eliminado");
+        header("Location: principal.php?registro=eliminado");
     } else {
-        header("Location: index.php?registro=error");
+        header("Location: principal.php?registro=error");
     }
 }
 

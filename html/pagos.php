@@ -9,7 +9,7 @@ $sql_pendientes = "SELECT
                     per.nombre AS nombre_persona, 
                     l.nombre_labor, 
                     pa.cantidad_fondadas, 
-                    (pa.cantidad_fondadas * l.precio_por_fondada) AS total_por_participacion
+                    pa.monto_total AS total_por_participacion
                    FROM participacion pa
                    JOIN persona per ON pa.id_persona = per.id_persona
                    JOIN labor l ON pa.id_labor = l.id_labor
@@ -24,7 +24,7 @@ $sql_realizados = "SELECT
                     per.nombre AS nombre_persona, 
                     l.nombre_labor, 
                     pa.cantidad_fondadas, 
-                    (pa.cantidad_fondadas * l.precio_por_fondada) AS total_por_participacion, 
+                    pa.monto_total AS total_por_participacion, 
                     p.fecha_pago
                    FROM pago p
                    JOIN participacion pa ON p.id_participacion = pa.id_participacion
@@ -45,6 +45,7 @@ if (isset($_POST['pagar'])) {
     
     // Redirigir a la página de pagos después de realizar el pago
     header("Location: pagos.php?id_molienda=$id_molienda");
+    header("Location: pagos.php?id_molienda=$id_molienda&registro=pagoexitoso");
     exit();
 }
 ?>
@@ -77,6 +78,14 @@ if (isset($_POST['pagar'])) {
             <div class="card mt-4">
                 <div class="card-header">Lista de Pagos Pendientes</div>
                 <div class="card-body">
+                 <!-- Mensaje de éxito o error -->
+                 <?php
+                    if (isset($_GET['registro'])) {
+                        if ($_GET['registro'] == 'pagoexitoso') {
+                            echo '<div id="mensaje-exito" class="alert alert-success mt-3">Pago realizado exitosamente.</div>';
+                        }
+                    }
+                ?>
                     <?php if (mysqli_num_rows($resultado_pendientes) > 0): ?>
                         <table class="table table-bordered">
                             <thead>
@@ -151,6 +160,9 @@ if (isset($_POST['pagar'])) {
 
     <a href="molienda.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary mt-4">Volver a Molienda</a>
 </div>
+
+<!-- codigo para eliminar los mensajes despues de 10 segundos  -->
+<script src="../js/utilidades.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>

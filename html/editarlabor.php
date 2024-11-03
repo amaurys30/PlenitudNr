@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($stmt->execute()) {
             // Redirigir con éxito
-            header("Location: index.php?registro=actualizacionlaborexitoso");
+            header("Location: principal.php?registro=actualizacionlaborexitoso");
         } else {
             // Error en la actualización
-            header("Location: index.php?registro=actualizacionlaborerror");
+            header("Location: principal.php?registro=actualizacionlaborerror");
         }
 
         $stmt->close();
     } else {
         // Datos inválidos
-        header("Location: index.php?registro=actualizacionlaborerror");
+        header("Location: principal.php?registro=actualizacionlaborerror");
     }
 }
 

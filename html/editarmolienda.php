@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if (mysqli_query($conexion, $sql)) {
         // Si la actualización fue exitosa
-        header("Location: index.php?actualizacion=Actualizacion exitosa");
+        header("Location: principal.php?actualizacion=Actualizacion exitosa");
     } else {
         // Si hubo un error en la actualización
         echo "Error: " . mysqli_error($conexion);

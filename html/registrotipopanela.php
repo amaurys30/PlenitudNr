@@ -11,14 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (mysqli_num_rows($result) > 0) {
         // Si ya existe, redirigir con un mensaje de error
-        header("Location: index.php?registro=existe");
+        header("Location: principal.php?registro=existe");
     } else {
         // Si no existe, agregar el nuevo tipo de panela
         $sql = "INSERT INTO PrecioPanela (tipo_panela, precio_unitario) VALUES ('$tipo_panela', '$precio_unitario')";
         if (mysqli_query($conexion, $sql)) {
-            header("Location: index.php?registro=exitoso");
+            header("Location: principal.php?registro=exitoso");
         } else {
-            header("Location: index.php?registro=error");
+            header("Location: principal.php?registro=error");
         }
     }
 }

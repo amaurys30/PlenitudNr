@@ -11,7 +11,7 @@ $molienda = mysqli_fetch_assoc($resultado_estado);
 
 // Verificar si la molienda ya está inactiva
 if ($molienda['estado'] == 'inactiva') {
-    echo "<script>alert('Esta molienda ya está finalizada.'); window.location.href = 'index.php';</script>";
+    header("Location: principal.php?registro=moliendaFinalizada");
     exit;
 }
 
@@ -26,7 +26,7 @@ $resultado_pendientes = mysqli_query($conexion, $sql_pendientes);
 
 // Verificar si hay pagos pendientes
 if (mysqli_num_rows($resultado_pendientes) > 0) {
-    echo "<script>alert('Hay pagos pendientes. No se puede finalizar la molienda.'); window.location.href = 'index.php';</script>";
+    header("Location: principal.php?registro=pagosPendientes");
     exit;
 }
 
@@ -38,9 +38,9 @@ $sql_finalizar = "UPDATE molienda
                   WHERE id_molienda = $id_molienda";
 
 if (mysqli_query($conexion, $sql_finalizar)) {
-    echo "<script>alert('La molienda ha sido finalizada correctamente.'); window.location.href = 'index.php';</script>";
+    header("Location: principal.php?registro=finalizadaExitosamente");
 } else {
-    echo "<script>alert('Error al finalizar la molienda.'); window.location.href = 'index.php';</script>";
+    header("Location: principal.php?registro=errorFinalizar");
 }
 
 mysqli_close($conexion);
