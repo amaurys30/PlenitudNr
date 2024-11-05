@@ -1,4 +1,5 @@
 <?php
+// Inicia la sesión
 session_start();
 include 'conexion.php'; // Asegúrate de incluir tu archivo de conexión a la base de datos
 
@@ -23,9 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Redirigir según el tipo de usuario
             if ($fila['tipo_usuario'] == 'administrador') {
-                header("Location: principal.php");
+                header("Location: principal.php"); //aqui para administrador
             } else {
-                header("Location: principal.php");
+                header("Location: principal.php"); //aqui para general
             }
             exit();
         } else {

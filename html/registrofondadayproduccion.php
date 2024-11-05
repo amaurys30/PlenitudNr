@@ -7,6 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $cantidad_grande = $_POST['cantidad_grande'];
     $cantidad_mediana = $_POST['cantidad_mediana'];
     $cantidad_pequena = $_POST['cantidad_pequena'];
+    $cantidad_jumbo = $_POST['cantidad_jumbo'];
 
     // Iniciar transacción
     mysqli_begin_transaction($conexion);
@@ -21,15 +22,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $precio_grande = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT precio_unitario FROM PrecioPanela WHERE tipo_panela = 'grande'"))['precio_unitario'];
         $precio_mediana = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT precio_unitario FROM PrecioPanela WHERE tipo_panela = 'mediana'"))['precio_unitario'];
         $precio_pequena = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT precio_unitario FROM PrecioPanela WHERE tipo_panela = 'pequeña'"))['precio_unitario'];
+        $precio_jumbo = mysqli_fetch_assoc(mysqli_query($conexion, "SELECT precio_unitario FROM PrecioPanela WHERE tipo_panela = 'jumbo'"))['precio_unitario'];
 
         // Insertar producción de panela
         $sql_produccion_grande = "INSERT INTO ProduccionPanela (id_fondada, tipo_panela, cantidad_panela, precio_unitario) VALUES ('$id_fondada', 'grande', '$cantidad_grande', '$precio_grande')";
         $sql_produccion_mediana = "INSERT INTO ProduccionPanela (id_fondada, tipo_panela, cantidad_panela, precio_unitario) VALUES ('$id_fondada', 'mediana', '$cantidad_mediana', '$precio_mediana')";
         $sql_produccion_pequena = "INSERT INTO ProduccionPanela (id_fondada, tipo_panela, cantidad_panela, precio_unitario) VALUES ('$id_fondada', 'pequeña', '$cantidad_pequena', '$precio_pequena')";
+        $sql_produccion_jumbo = "INSERT INTO ProduccionPanela (id_fondada, tipo_panela, cantidad_panela, precio_unitario) VALUES ('$id_fondada', 'jumbo', '$cantidad_jumbo', '$precio_jumbo')";
 
         mysqli_query($conexion, $sql_produccion_grande);
         mysqli_query($conexion, $sql_produccion_mediana);
         mysqli_query($conexion, $sql_produccion_pequena);
+        mysqli_query($conexion, $sql_produccion_jumbo);
 
         // Confirmar transacción
         mysqli_commit($conexion);

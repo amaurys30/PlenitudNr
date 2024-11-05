@@ -1,4 +1,14 @@
 <?php
+session_start();
+// Verifica si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_usuario'])) {
+    // Si no está autenticado, redirigir al inicio de sesión
+    header("Location: ../index.php");
+    exit;
+}
+?>
+
+<?php
 include 'conexion.php'; // Incluir la conexión a la base de datos
 
 // Obtener el ID de la molienda desde la URL
@@ -30,6 +40,12 @@ $resultado_labores = mysqli_query($conexion, $sql_labores);
 $sql_total_fondadas = "SELECT COUNT(*) AS total_fondadas FROM fondada WHERE id_molienda = $id_molienda";
 $resultado_fondadas = mysqli_query($conexion, $sql_total_fondadas);
 $total_fondadas = mysqli_fetch_assoc($resultado_fondadas)['total_fondadas'];
+
+// Consulta para obtener el total de los montos de participaciones
+$sql_total_participaciones = "SELECT SUM(monto_total) AS total_participaciones FROM participacion WHERE id_molienda = $id_molienda";
+$resultado_total_participaciones = mysqli_query($conexion, $sql_total_participaciones);
+$total_participaciones = mysqli_fetch_assoc($resultado_total_participaciones)['total_participaciones'];
+
 
 // Verificar si hay un mensaje de éxito o error
 $mensaje = $_GET['mensaje'] ?? null;
@@ -122,28 +138,35 @@ $mensaje = $_GET['mensaje'] ?? null;
                     Lista de Participaciones
                 </div>
                 <div class="card-body">
-                    <table class="table table-bordered">
-                        <thead>
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Persona</th>
+                            <th>Labor</th>
+                            <th>Cantidad de Fondadas</th>
+                            <th>Fecha de Participación</th>
+                            <th>Monto Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($participacion = mysqli_fetch_assoc($resultado_participaciones)): ?>
                             <tr>
-                                <th>Persona</th>
-                                <th>Labor</th>
-                                <th>Cantidad de Fondadas</th>
-                                <th>Fecha de Participación</th>
-                                <th>Monto Total</th> <!-- Nueva columna -->
+                                <td><?php echo htmlspecialchars($participacion['persona']); ?></td>
+                                <td><?php echo htmlspecialchars($participacion['labor']); ?></td>
+                                <td><?php echo htmlspecialchars($participacion['cantidad_fondadas']); ?></td>
+                                <td><?php echo htmlspecialchars($participacion['fecha_participacion']); ?></td>
+                                <td><?php echo htmlspecialchars(number_format($participacion['monto_total'], 2)); ?></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($participacion = mysqli_fetch_assoc($resultado_participaciones)): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($participacion['persona']); ?></td>
-                                    <td><?php echo htmlspecialchars($participacion['labor']); ?></td>
-                                    <td><?php echo htmlspecialchars($participacion['cantidad_fondadas']); ?></td>
-                                    <td><?php echo htmlspecialchars($participacion['fecha_participacion']); ?></td>
-                                    <td><?php echo htmlspecialchars($participacion['monto_total']); ?></td> <!-- Mostrar el monto total -->
-                                </tr>
-                            <?php endwhile; ?>
-                        </tbody>
-                    </table>
+                        <?php endwhile; ?>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right"><strong>Total:</strong></td>
+                            <td><strong><?php echo htmlspecialchars(number_format($total_participaciones ?? 0, 2)); ?></strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+
                 </div>
             </div>
         </div>

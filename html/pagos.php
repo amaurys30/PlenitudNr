@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Verifica si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_usuario'])) {
+    // Si no está autenticado, redirigir al inicio de sesión
+    header("Location: ../index.php");
+    exit;
+}
+?>
+
+<?php
 include 'conexion.php'; // Conexión a la base de datos
 
 $id_molienda = $_GET['id_molienda'];

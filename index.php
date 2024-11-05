@@ -1,3 +1,9 @@
+<?php
+    if (isset($_GET['registro'])) {
+        // Redirigir después de 10 segundos
+        header("Refresh:10; url=index.php");        
+    }
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -96,8 +102,18 @@
 <?php
     if (isset($_GET['contrasena'])) {
         if ($_GET['contrasena'] == 'incorrecta') {
-             echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Contraseña incorrecta</div>';
+            header("Location: index.php?registro=contrasenaincorrecta");
         } elseif ($_GET['contrasena'] == 'usuarionoencontrado') {
+            header("Location: index.php?registro=userincorrecta");
+        }
+    }
+?>
+
+<?php
+    if (isset($_GET['registro'])) {
+        if ($_GET['registro'] == 'contrasenaincorrecta') {
+            echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Contraseña incorrecta</div>';
+        } elseif ($_GET['registro'] == 'userincorrecta') {
             echo '<div id="mensaje-exito" class="alert alert-danger mt-3">El usuario no fue encontrado</div>';
         }
     }
@@ -118,9 +134,27 @@
                 </div>
                 <button type="submit" class="btn-login">Entrar</button>
                 <div class="forgot-link">
-                    <a href="#">¿Olvidaste tu contraseña?</a>
+                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalRecuperar">¿Olvidaste tu contraseña?</a>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="modalRecuperar" tabindex="-1" aria-labelledby="modalRecuperarLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalRecuperarLabel">Recuperar Contraseña</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Por favor comunicarse con el administrador.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+            </div>
         </div>
     </div>
 
@@ -132,5 +166,10 @@
     <script src="js/utilidades.js"></script>
     <!-- Enlace a Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JavaScript (incluye Popper.js) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

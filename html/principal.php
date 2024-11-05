@@ -1,4 +1,50 @@
 <?php
+require_once('conexion.php');
+
+// Definir cuántos registros mostrar por página
+$registros_por_pagina = 10;
+
+// Obtener el número de página desde la URL, si no se define, establecer en 1
+if (isset($_GET['pagina']) && is_numeric($_GET['pagina'])) {
+    $pagina_actual = (int)$_GET['pagina'];
+} else {
+    $pagina_actual = 1;
+}
+
+// Calcular el valor de OFFSET
+$offset = ($pagina_actual - 1) * $registros_por_pagina;
+
+// Contar el total de registros en la tabla
+$sql_total = "SELECT COUNT(*) as total FROM Molienda";
+$resultado_total = mysqli_query($conexion, $sql_total);
+$total_filas = mysqli_fetch_assoc($resultado_total)['total'];
+
+// Calcular el número total de páginas
+$total_paginas = ceil($total_filas / $registros_por_pagina);
+
+// Obtener los registros de la tabla Molienda con LIMIT y OFFSET
+$sql = "SELECT * FROM Molienda LIMIT $registros_por_pagina OFFSET $offset";
+$resultado = mysqli_query($conexion, $sql);
+?>
+
+<?php
+session_start();
+
+// Verifica si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_usuario'])) {
+    // Si no está autenticado, redirigir al inicio de sesión
+    header("Location: ../index.php");
+    exit;
+}
+
+// Opcional: Verificar el tipo de usuario
+if ($_SESSION['tipo_usuario'] !== 'administrador') {
+    echo "Acceso denegado. Solo administradores pueden ver esta página.";
+    exit;
+}
+?>
+
+<?php
 // Verificar si hay un mensaje de éxito o error
 $mensaje = $_GET['actualizacion'] ?? null;
 ?>
@@ -97,12 +143,12 @@ $mensaje = $_GET['actualizacion'] ?? null;
 
                 <!-- Contenedor del botón de cerrar sesión alineado a la derecha -->
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="btn btn-danger d-flex align-items-center" href="../index.php">
-                            Cerrar Sesión
-                            <img class="cerrarsesion ms-2" src="../recursos/imagenes/cerrar.jpg" alt="cerrar" style="width: 20px; height: 20px;">
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a class="btn btn-danger d-flex align-items-center" href="logout.php">
+                        Cerrar Sesión
+                        <img class="cerrarsesion ms-2" src="../recursos/imagenes/cerrar.jpg" alt="cerrar" style="width: 20px; height: 20px;">
+                    </a>
+                </li>
                 </ul>
             </div>
 
@@ -130,31 +176,17 @@ $mensaje = $_GET['actualizacion'] ?? null;
             </form>
         </div>
 
+        
         <!-- Ver Moliendas -->
         <div class="contenido-seccion" id="ver-moliendas-content" style="display:none;">
             <h5 class="card-title">Listado de Moliendas</h5>
+
             <!-- Mostrar mensajes de éxito o error -->
             <?php if ($mensaje): ?>
                 <div id="mensaje-exito" class="alert alert-success">
                     <?php echo htmlspecialchars($mensaje); ?>
                 </div>
             <?php endif; ?>
-
-
-             <!-- Mensaje de éxito o error -->
-            <?php
-                 if (isset($_GET['registro'])) {
-                    if ($_GET['registro'] == 'moliendaFinalizada') {
-                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Esta molienda ya está finalizada.</div>';
-                    } elseif ($_GET['registro'] == 'pagosPendientes') {
-                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Hay pagos pendientes. No se puede finalizar la molienda.</div>';
-                    }elseif ($_GET['registro'] == 'finalizadaExitosamente') {
-                        echo '<div id="mensaje-exito" class="alert alert-success mt-3">La molienda ha sido finalizada correctamente.</div>';
-                    }elseif ($_GET['registro'] == 'errorFinalizar') {
-                        echo '<div id="mensaje-exito" class="alert alert-danger mt-3">Error al finalizar la molienda.</div>';
-                    }
-                }
-            ?>
 
             <table class="table mt-4">
                 <thead>
@@ -169,16 +201,12 @@ $mensaje = $_GET['actualizacion'] ?? null;
                 </thead>
                 <tbody>
                     <?php
-                    require_once('conexion.php');
-                    $sql = "SELECT * FROM Molienda";
-                    $resultado = mysqli_query($conexion, $sql);
                     if (mysqli_num_rows($resultado) > 0) {
-                        $i = 0;
+                        $i = $offset + 1;
                         while ($fila = mysqli_fetch_array($resultado)) {
-                            $i++;
                             ?>
                             <tr>
-                                <td><?php echo $i; ?></td>
+                                <td><?php echo $i++; ?></td>
                                 <td><?php echo htmlspecialchars($fila["descripcion"] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($fila["fecha_inicio"] ?? ''); ?></td>
                                 <td><?php echo htmlspecialchars($fila["fecha_fin"] ?? ''); ?></td>
@@ -190,7 +218,7 @@ $mensaje = $_GET['actualizacion'] ?? null;
                                     onclick="return confirm('¿Estás seguro de que deseas finalizar esta molienda?')">Finalizar</a>
                                 </td>
                             </tr>
-
+                            
                             <!-- Modal para editar molienda -->
                             <div class="modal fade" id="editarModal-<?php echo $fila['id_molienda']; ?>" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
                                 <div class="modal-dialog">
@@ -215,7 +243,7 @@ $mensaje = $_GET['actualizacion'] ?? null;
                                                     <label for="fechafin">Fecha de Finalización</label>
                                                 </div>
                                                 <div class="form-floating mb-3">
-                                                    <select class="form-control" id="estado" name="estado" required>
+                                                    <select class="form-control" id="estado" name="estado" required disabled>
                                                         <option value="activa" <?php echo ($fila['estado'] == 'activa') ? 'selected' : ''; ?>>Activa</option>
                                                         <option value="inactiva" <?php echo ($fila['estado'] == 'inactiva') ? 'selected' : ''; ?>>Inactiva</option>
                                                     </select>
@@ -232,10 +260,34 @@ $mensaje = $_GET['actualizacion'] ?? null;
                     } else {
                         echo "<tr><td colspan='6'>No se encontraron registros</td></tr>";
                     }
-                    //mysqli_close($conexion);
                     ?>
                 </tbody>
             </table>
+
+            <!-- Paginación -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <?php if ($pagina_actual > 1): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina_actual - 1; ?>" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <?php for ($pagina = 1; $pagina <= $total_paginas; $pagina++): ?>
+                        <li class="page-item <?php if ($pagina == $pagina_actual) echo 'active'; ?>">
+                            <a class="page-link" href="?pagina=<?php echo $pagina; ?>"><?php echo $pagina; ?></a>
+                        </li>
+                    <?php endfor; ?>
+                    <?php if ($pagina_actual < $total_paginas): ?>
+                        <li class="page-item">
+                            <a class="page-link" href="?pagina=<?php echo $pagina_actual + 1; ?>" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                </ul>
+            </nav>
         </div>
 
         <!-- Registrar Personas -->
@@ -408,6 +460,7 @@ $mensaje = $_GET['actualizacion'] ?? null;
                                 <option value="grande">Grande</option>
                                 <option value="mediana">Mediana</option>
                                 <option value="pequeña">Pequeña</option>
+                                <option value="jumbo">jumbo</option>
                             </select>
                             <label for="tipo_panela">Tipo de Panela</label>
                         </div>
@@ -485,6 +538,7 @@ $mensaje = $_GET['actualizacion'] ?? null;
                                                                 <option value="grande" <?php echo ($row['tipo_panela'] == 'grande') ? 'selected' : ''; ?>>Grande</option>
                                                                 <option value="mediana" <?php echo ($row['tipo_panela'] == 'mediana') ? 'selected' : ''; ?>>Mediana</option>
                                                                 <option value="pequeña" <?php echo ($row['tipo_panela'] == 'pequeña') ? 'selected' : ''; ?>>Pequeña</option>
+                                                                <option value="jumbo" <?php echo ($row['tipo_panela'] == 'jumbo') ? 'selected' : ''; ?>>jumbo</option>
                                                             </select>
                                                             <label for="tipo_panela">Tipo de Panela</label>
                                                         </div>

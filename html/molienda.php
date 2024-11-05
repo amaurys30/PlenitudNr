@@ -1,4 +1,15 @@
 <?php
+session_start();
+
+// Verifica si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_usuario'])) {
+    // Si no está autenticado, redirigir al inicio de sesión
+    header("Location: ../index.php");
+    exit;
+}
+?>
+
+<?php
 include 'conexion.php';
 
 // Verifica si se pasó el ID de molienda
@@ -28,6 +39,7 @@ $inicio = ($pagina_actual > 1) ? ($pagina_actual * $fondadas_por_pagina) - $fond
 $sql_fondadas = "SELECT f.id_fondada, f.fecha_agregada, f.cantidad_litros,
                     (SELECT SUM(pp.cantidad_panela) FROM produccionpanela pp WHERE pp.id_fondada = f.id_fondada AND pp.tipo_panela = 'grande') AS cantidad_grande,
                     (SELECT SUM(pp.cantidad_panela) FROM produccionpanela pp WHERE pp.id_fondada = f.id_fondada AND pp.tipo_panela = 'mediana') AS cantidad_mediana,
+                    (SELECT SUM(pp.cantidad_panela) FROM produccionpanela pp WHERE pp.id_fondada = f.id_fondada AND pp.tipo_panela = 'jumbo') AS cantidad_jumbo,
                     (SELECT SUM(pp.cantidad_panela) FROM produccionpanela pp WHERE pp.id_fondada = f.id_fondada AND pp.tipo_panela = 'pequeña') AS cantidad_pequena
                 FROM fondada f 
                 WHERE f.id_molienda = $id_molienda
@@ -69,6 +81,8 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
         <a href="participacion.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Participaciones</a>
         <!-- boton para pagos -->
         <a href="pagos.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Pagos</a>
+        <!-- boton para gastos -->
+        <a href="gastos.php?id_molienda=<?php echo $id_molienda; ?>" class="btn btn-primary">Gastos</a>
         <!-- Tabla de fondadas -->
         <h4 class="mt-4">Fondadas Registradas</h4>
          <!-- Mensaje de éxito o error -->
@@ -90,6 +104,7 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
                     <th>Panela Grande</th>
                     <th>Panela Mediana</th>
                     <th>Panela Pequeña</th>
+                    <th>Panela Jumbo</th>
                 </tr>
             </thead>
             <tbody>
@@ -100,6 +115,7 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
                         <td><?php echo htmlspecialchars($fondada['cantidad_grande'] ?? 0); ?></td>
                         <td><?php echo htmlspecialchars($fondada['cantidad_mediana'] ?? 0); ?></td>
                         <td><?php echo htmlspecialchars($fondada['cantidad_pequena'] ?? 0); ?></td>
+                        <td><?php echo htmlspecialchars($fondada['cantidad_jumbo'] ?? 0); ?></td>
                     </tr>
                 <?php endwhile; ?>
             </tbody>
@@ -145,6 +161,10 @@ $total_paginas = ceil($total_fondadas / $fondadas_por_pagina);
                         <div class="form-floating mb-3">
                             <input type="number" class="form-control" id="cantidad_pequena" name="cantidad_pequena" required>
                             <label for="cantidad_pequena">Cantidad de Panela Pequeña</label>
+                        </div>
+                        <div class="form-floating mb-3">
+                            <input type="number" class="form-control" id="cantidad_jumbo" name="cantidad_jumbo" required>
+                            <label for="cantidad_jumbo">Cantidad de Panela jumbo</label>
                         </div>
                         <input type="submit" value="Agregar Fondada" class="btn btn-primary">
                     </form>

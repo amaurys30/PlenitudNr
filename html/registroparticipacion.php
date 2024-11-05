@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $precio_procesamiento = mysqli_fetch_assoc($resultado_precio)['precio_por_fondada'];
 
         // Calcular el monto total para el procesamiento (precio * total fondadas / 6)
-        $monto_total = ($precio_procesamiento * $total_fondadas) / 6;
+        $monto_total = ($precio_procesamiento * $total_fondadas) / $total_procesamiento;
 
     } else {
         // Obtener el precio de la labor seleccionada

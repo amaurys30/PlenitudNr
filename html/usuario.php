@@ -1,3 +1,20 @@
+<?php
+session_start();
+
+// Verifica si el usuario ha iniciado sesión
+if (!isset($_SESSION['id_usuario'])) {
+    // Si no está autenticado, redirigir al inicio de sesión
+    header("Location: ../index.php");
+    exit;
+}
+
+// Opcional: Verificar el tipo de usuario
+if ($_SESSION['tipo_usuario'] !== 'administrador') {
+    echo "Acceso denegado. Solo administradores pueden ver esta página.";
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
